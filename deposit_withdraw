@@ -3,6 +3,40 @@ void deposit(user& user1);
 void withdraw(user& user1);
 
 
+int main()
+{
+    do
+    {
+        signup(users);
+        login(users);
+        viewAccountDetails(users[thisuserindex]);
+        cout << "Choose an action:\n1. Deposit\n2. Withdraw\n";
+        int choice;
+        cin >> choice;
+        switch (choice) {
+        case 1:
+            deposit(users[thisuserindex]);
+            break;
+        case 2:
+            withdraw(users[thisuserindex]);
+            break;
+        default:
+            cout << "Invalid choice.\n";
+        }
+        viewAccountDetails(users[thisuserindex]);
+        cout << "Do you want to do another transaction? y/n";
+        
+        cin >>  again;
+        if (again == 'y')
+        {
+            retry = true;
+        }
+        else
+        {
+            retry = false;
+        }
+    } while (retry);
+}
 
 bool balanceCheck(user user1, double amount) {
     if (amount < 50) {
