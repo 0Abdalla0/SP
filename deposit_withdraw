@@ -1,0 +1,35 @@
+bool balanceCheck(user user1, double amount);
+void deposit(user& user1);
+void withdraw(user& user1);
+
+
+
+bool balanceCheck(user user1, double amount) {
+    if (amount < 50) {
+        cout << "Minimum amount for transaction is 50.\n";
+        return false;
+    }
+    if (user1.balance - amount < 0) {
+        cout << "Insufficient balance.\n";
+        return false;
+    }
+    return true;
+}
+
+void deposit(user& user1) {
+    double amount;
+    cout << "Enter the amount to deposit into the account: ";
+    cin >> amount;
+    user1.balance += amount;
+    cout << "Deposit successful. Updated balance: $" << user1.balance << endl;
+}
+
+void withdraw(user& user1) {
+    double amount;
+    cout << "Enter the amount to withdraw from the account: ";
+    cin >> amount;
+    if (balanceCheck(user1, amount)) {
+        user1.balance -= amount;
+        cout << "Withdrawal successful. Updated balance: $" << user1.balance << endl;
+    }
+}
