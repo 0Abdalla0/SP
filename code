@@ -1,1 +1,201 @@
+#include <iostream>
+
+#define usersSize 100
+
+using namespace std;
+
+struct account {
+	string username;
+	string password;
+	string email;
+};
+struct transactions {
+	float transactionAmount;
+	string transactionType;
+	string reciever;
+};
+struct user {
+	int age;
+	float balance;
+	account userAccount;
+	transactions userTransaction[100];
+	bool frozen = 0;
+	int accNum;
+	string phoneNum;
+	int transactionCount = 0;
+};
+int anotherUserIndex, thisUserIndex;
+
+bool signup(user users[]);
+bool findEmail(string email, user users[]);
+bool findPhoneNum(string phoneNum, user users[]);
+bool findAccNum(int accNum, user users[]);
+bool login (user users[]);
+bool findLogin(string email, string password,user users[]);
+bool wrongEmail(string Email,user users[]);
+bool wrongPassword(string password,user users[]);
+bool weakPassword(string password, user users[]);
+int main()
+{
+	char ans;
+	user users[usersSize];
+
+	while (!signup(users)) {
+		cout << "Do you want to retry? (N/Y)" << endl;
+		cin >> ans;
+		if (ans == 'n' || ans == 'N')break;
+	}
+	while (!login(users)) {
+		cout << "Do you want to retry? (N/Y)" << endl;
+		cin >> ans;
+		if (ans == 'n' || ans == 'N')break;
+	}
+
+
+}
+//ask ahmed amr
+bool signup(user users[]) {
+	user temp;
+	cout << "Enter your name: " << endl;
+	cin >> temp.userAccount.username;
+	cout << "Enter your email: " << endl;
+	cin >> temp.userAccount.email;
+	if (findEmail(temp.userAccount.email, users)) {
+		cout << "This email already exists." << endl;
+		return false;
+	}
+	if (temp.userAccount.email.find("@user.bank") == string::npos) {
+		cout << "Invalid mail format." << endl;
+		return false;
+	}
+	cout << "Enter your password: " << endl;
+	cin >> temp.userAccount.password;
+	if (weakPassword(temp.userAccount.password,users))
+	{
+			cout << "Weak password\n";
+			return false;
+	}
+	cout << "Enter your age: " << endl;
+	cin >> temp.age;
+	if (temp.age < 21) {
+		cout << "You must be 21 or above" << endl;
+		return false;
+	}
+	cout << "Enter balance: " << endl;
+	cin >> temp.balance;
+	if (temp.balance < 200) {
+		cout << "Minimum balance is 200 !" << endl;
+		return false;
+	}
+	cout << "Enter phone number: " << endl;
+	cin >> temp.phoneNum;
+	if (findPhoneNum(temp.phoneNum, users)) {
+		cout << "This phone number is already in use." << endl;
+		return false;
+	}
+	temp.accNum = (rand() % 101) + 100;
+	while (findAccNum(temp.accNum, users)) {
+		temp.accNum = (rand() % 101) + 100;
+	}
+	for (int i = 0; i < usersSize; i++) {
+		if (users[i].userAccount.email.empty()) {
+			users[i] = temp;
+		}
+	}
+}
+
+bool findEmail(string email, user users[]) {
+	for (int i = 0; i < usersSize; i++) {
+		if (email == users[i].userAccount.email) {
+			return true;
+		}
+	}
+	return false;
+}
+bool findPhoneNum(string phoneNum, user users[]) {
+	for (int i = 0; i < usersSize; i++) {
+		if (phoneNum == users[i].phoneNum) {
+			return true;
+		}
+	}
+	return false;
+}
+bool findAccNum(int accNumber, user users[]) {
+	for (int i = 0; i < usersSize; i++) {
+		if (accNumber == users[i].accNum) {
+			anotherUserIndex = i;
+			return true;
+		}
+	}
+	return false;
+}
+//Ask ziad abdelaziz
+bool login(user users[])
+{
+	user temp;
+	cout << "Please enter your email: \n";
+	cin >> temp.userAccount.email;
+	cout << "please enter your password: \n";
+	cin >> temp.userAccount.password;
+	if (findLogin(temp.userAccount.email, temp.userAccount.password, users))
+	{
+		cout << "Logged in successfully\n";
+		return true;
+	}
+	else
+	{
+		cout << "Failed to login ";
+		if (wrongEmail(temp.userAccount.email, users))
+		{
+			cout << "wrong email\n";
+		}
+		if (wrongPassword(temp.userAccount.password, users))
+		{
+			cout << "wrong password\n";
+		}
+		
+	}
+	
+}
+bool findLogin(string email, string password, user users[])
+{
+	for (int i = 0; i < usersSize; i++)
+	{
+		if (email == users[i].userAccount.email && password == users[i].userAccount.password)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool wrongEmail(string email, user users[])
+{
+	for (int i = 0; i < usersSize; i++)
+	{
+		if (email != users[i].userAccount.email)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool wrongPassword(string password,user users[])
+{
+	for (int i = 0; i < usersSize; i++)
+	{
+		if (password != users[i].userAccount.password)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool weakPassword(string password, user users[])
+{
+	if (password.size() <= 3)
+	{
+		return true;
+	}
+	return false;
+}
 
